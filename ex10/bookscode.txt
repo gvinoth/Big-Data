@@ -1,0 +1,14 @@
+A = load '/tmp/books_small' using PigStorage('\n','-tagPath');
+B = foreach A generate $0 as file, flatten(TOKENIZE((chararray)$1)) as word;
+-- Job 1
+C = group B by (word, file);
+D = foreach C generate COUNT(B) as n, group.word, group.file;
+-- Job 2
+E = group D by file;
+F = foreach E generate SUM(D.n) as N, flatten(D);
+-- Job 3
+G = group F by word;
+H = foreach G generate COUNT(F.file) as m, flatten(F);
+-- Job 4
+R = foreach H generate file, word, ((1.0*n)/N)*LOG(10.0/m) as tfidf;
+store R into '/user/labuser/jakovits/pig_out8';

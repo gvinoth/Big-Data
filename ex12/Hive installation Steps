@@ -1,0 +1,109 @@
+#check
+sudo update-alternatives --config java   (select java version 8)
+
+nano $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64   
+
+-------------------------------------------------------
+#Hive
+wget https://apache.osuosl.org/hive/hive-3.1.2/apache-hive-3.1.2-bin.tar.gz
+
+tar -xzf apache-hive-3.1.2-bin.tar.gz
+--------------------------------------------------------
+
+nano ~/.bashrc
+
+#Hive configurations
+export HIVE_HOME=/home/hadoop/apache-hive-3.1.2-bin
+export PATH=$PATH:$HIVE_HOME/sbin:$HIVE_HOME/bin
+export CLASSPATH=$CLASSPATH:$HADOOP_HOME/lib/*:$HIVE_HOME/lib/*
+
+
+source ~/.bashrc
+--------------------------------------------------------
+cd $HIVE_HOME/conf
+cp hive-default.xml.template hive-site.xml
+sudo gedit hive-site.xml
+   ( 1. Replace all occurrences of ${system:java.io.tmpdir} to /tmp/hive
+   
+     2. Replace all occurrences of ${system:user.name} to hadoop, the username should be the one you log in with.  
+     3. (line no 3215 delete spl char &#8;)
+--------------------------------------------------------
+#Create the warehouse directory within the /user/hive/ parent directory
+
+hadoop fs -mkdir /user/
+hadoop fs -mkdir /user/hive/
+hadoop fs -mkdir /user/hive/warehouse
+
+#Create tmp Directory
+hadoop fs -mkdir /user/tmp
+
+#Add write and execute permissions to warehouse & tmp group members
+hadoop fs -chmod g+w /user/hive/warehouse
+hadoop fs -chmod g+w /user/tmp
+--------------------------------------------------------
+#Version Conflict
+
+rm $HIVE_HOME/lib/guava-19.0.jar
+cp $HADOOP_HOME/share/hadoop/hdfs/lib/guava-27.0-jre.jar $HIVE_HOME/lib/
+start-all.sh
+cd $HIVE_HOME
+bin/schematool -initSchema -dbType derby
+hive --version
+cd
+hive
+--------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

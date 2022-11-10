@@ -1,0 +1,31 @@
+mkdir pig
+
+cd pig/
+
+wget https://downloads.apache.org/pig/pig-0.17.0/pig-0.17.0.tar.gz
+
+tar -xvf pig-0.17.0.tar.gz
+
+cd
+
+nano .bashrc
+
+#Add the below lines in the file
+#JAVA_HOME
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+#Apache Pig Environment Variables
+export PIG_HOME=/home/hadoop/pig/pig-0.17.0
+export PATH=$PATH:/home/hadoop/pig/pig-0.17.0/bin
+export PIG_CLASSPATH=$HADOOP_HOME/conf
+
+source .bashrc
+
+pig -version
+
+#Start Apache Pig
+#(Local mode)
+pig -x local
+
+#(MapReduce Mode)
+pig      or   pig -x mapreduce
+
